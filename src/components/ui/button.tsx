@@ -64,10 +64,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             <div className="flex w-fit items-center justify-center gap-2">
               {icon && !isLoading && icon}
               {isLoading && <LoadingIcon />}
-              {children && <span>{children}</span>}
+              {children && <>{children}</>}
             </div>
           ) : (
-            <span>{children}</span>
+            <>{children}</>
           )
         }
         className={cn(

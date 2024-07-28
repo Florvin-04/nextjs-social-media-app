@@ -30,13 +30,17 @@ export const signUpSchema = z
     },
   );
 
+export type SignUpSchemaType = z.infer<typeof signUpSchema>;
+
 export const loginSchema = z.object({
   username: z.string().trim().min(1, "required field"),
   password: z.string().trim().min(1, "required field"),
 });
 
-export type SignUpSchemaType = z.infer<typeof signUpSchema>;
-
-type LoginSchemaKeys = keyof z.infer<typeof loginSchema>;
-
 export type LoginSchemaType = z.infer<typeof loginSchema>;
+
+export const createPostSchema = z.object({
+  content: z.string().trim().min(1, "required field"),
+});
+
+export type CreatePostType = z.infer<typeof createPostSchema>;
