@@ -3,17 +3,16 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-import { handleSubmitPostAction } from "./action";
 import { useSession } from "@/app/(main)/SessionProvider";
 import UserAvatar from "../../UserAvatar";
 import "./styles.css";
 import { Button } from "@/components/ui/button";
-import { useTransition } from "react";
+import { useSubmitPostMutation } from "./mutaion";
 
 const PostEditor = () => {
   const { user } = useSession();
 
-  const [isPending, startTransition] = useTransition();
+  const mutaion = useSubmitPostMutation();
 
   const editor = useEditor({
     extensions: [
@@ -34,14 +33,18 @@ const PostEditor = () => {
     }) || "";
 
   const handleSubmit = () => {
-    startTransition(async () => {
-      await handleSubmitPostAction({ content: input });
-      editor?.commands.clearContent();
-    });
+    mutaion.mutate(
+      { content: input },
+      {
+        onSuccess: () => {
+          editor?.commands.clearContent();
+        },
+      },
+    );
   };
 
   return (
-    <div className="flex flex-col gap-3 bg-card px-2 py-3 rounded-2xl">
+    <div className="flex flex-col gap-3 rounded-2xl bg-card px-2 py-3">
       <div className="flex gap-4">
         <UserAvatar avatarUrl={user.avatarUrl!} />
         <EditorContent
@@ -51,8 +54,8 @@ const PostEditor = () => {
       </div>
       <div className="flex">
         <Button
-          isLoading={isPending}
-          disabled={isPending}
+          isLoading={mutaion.isPending}
+          disabled={mutaion.isPending || input.trim() === ""}
           onClick={handleSubmit}
           className="ml-auto w-fit"
         >

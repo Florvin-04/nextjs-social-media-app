@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     // to determine where the next fetch is in(prisma database)
     const cursor = req.nextUrl.searchParams.get("cursor") || undefined;
 
-    const pageSize = 2;
+    const pageSize = 5;
 
     const posts = await prisma.post.findMany({
       include: postDataInclude,
