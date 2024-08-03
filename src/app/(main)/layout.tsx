@@ -22,7 +22,7 @@ const layout = async ({
           <Menubar className="sticky top-[4.3rem] hidden h-fit w-fit flex-col gap-1 rounded-lg px-2 py-2 sm:flex" />
           {children}
         </div>
-        <Menubar className="mt-auto flex justify-evenly py-1 sm:hidden" />
+        <Menubar className="mt-auto flex justify-evenly py-1 sm:hidden sticky bottom-0" />
       </div>
     </SessionProvider>
   );

@@ -7,8 +7,6 @@ import {
 } from "@tanstack/react-query";
 import { handleSubmitPostAction } from "./action";
 import { PostPage } from "@/lib/types";
-import { pages } from "next/dist/build/templates/app-page";
-import { ZodError } from "zod";
 
 export const useSubmitPostMutation = () => {
   const { toast } = useToast();
@@ -42,7 +40,14 @@ export const useSubmitPostMutation = () => {
         },
       );
 
-      toast({ variant: "success", description: "Success" });
+      queryClient.invalidateQueries({
+        queryKey: queryFilter.queryKey,
+        predicate(query) {
+          return !query.state.data;
+        },
+      });
+
+      toast({ variant: "success", title: "Success", description: "Post" });
     },
     onError: (error) => {
       toast({
