@@ -18,7 +18,6 @@ const FollowingFeed = () => {
   } = useInfiniteQuery({
     queryKey: ["post-feed", "following"],
     queryFn: ({ pageParam }) => {
-      console.log(pageParam);
       return KyInstance.get(
         "/api/posts/following",
         pageParam ? { searchParams: { cursor: pageParam } } : {},
