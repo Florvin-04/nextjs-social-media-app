@@ -1,6 +1,6 @@
 import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
-import { userDataSelect } from "@/lib/types";
+import { getUserDataSelect } from "@/lib/types";
 import Link from "next/link";
 import React, { Suspense } from "react";
 import UserAvatar from "./UserAvatar";
@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { unstable_cache } from "next/cache";
 import { formatNumber } from "@/lib/utils";
+import FollowButton from "./FollowButton";
 
 const TrendSidebar = async () => {
   return (
@@ -25,13 +26,20 @@ export default TrendSidebar;
 const WhoToFollow = async () => {
   const { user } = await validateRequest();
 
+  if (!user) return null;
+
   const usersToFollow = await prisma.user.findMany({
     where: {
       NOT: {
-        id: user?.id,
+        id: user.id,
+      },
+      followers: {
+        none: {
+          followerId: user.id,
+        },
       },
     },
-    select: userDataSelect,
+    select: getUserDataSelect(user.id),
     take: 5,
   });
 
@@ -50,13 +58,24 @@ const WhoToFollow = async () => {
             >
               <UserAvatar avatarUrl={userToFollow.avatarUrl!} />
               <div className="min-w-0">
-                <p className="hover:underline break-all line-clamp-1">{userToFollow.displayName}</p>
-                <p className="text-muted-foreground hover:underline break-all line-clamp-1">
+                <p className="line-clamp-1 break-all hover:underline">
+                  {userToFollow.displayName}
+                </p>
+                <p className="line-clamp-1 break-all text-muted-foreground hover:underline">
                   @{userToFollow.username}
                 </p>
               </div>
             </Link>
-            <Button>Follow</Button>
+
+            <FollowButton
+              userId={userToFollow.id}
+              initalState={{
+                followers: userToFollow._count.followers,
+                isFollowedByUser: userToFollow.followers.some(
+                  (follower) => follower.followerId === user.id,
+                ),
+              }}
+            />
           </div>
         );
       })}
@@ -80,7 +99,7 @@ const getTrendingTopics = unstable_cache(
     }));
   },
   ["trending_topics"],
-  { revalidate: 3 * 60 * 60 }, // 3 hours validation 
+  { revalidate: 3 * 60 * 60 }, // 3 hours validation
 );
 
 const TrendingTopics = async () => {
