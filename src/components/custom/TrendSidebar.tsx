@@ -9,6 +9,7 @@ import { Loader2 } from "lucide-react";
 import { unstable_cache } from "next/cache";
 import { formatNumber } from "@/lib/utils";
 import FollowButton from "./FollowButton";
+import UserTooltip from "./UserTooltip";
 
 const TrendSidebar = async () => {
   return (
@@ -52,20 +53,22 @@ const WhoToFollow = async () => {
             key={userToFollow.id}
             className="flex items-center justify-between gap-3"
           >
-            <Link
-              href={`/users/${userToFollow.username}`}
-              className="flex items-center gap-3"
-            >
-              <UserAvatar avatarUrl={userToFollow.avatarUrl!} />
-              <div className="min-w-0">
-                <p className="line-clamp-1 break-all hover:underline">
-                  {userToFollow.displayName}
-                </p>
-                <p className="line-clamp-1 break-all text-muted-foreground hover:underline">
-                  @{userToFollow.username}
-                </p>
-              </div>
-            </Link>
+            <UserTooltip user={userToFollow}>
+              <Link
+                href={`/users/${userToFollow.username}`}
+                className="flex items-center gap-3"
+              >
+                <UserAvatar avatarUrl={userToFollow.avatarUrl!} />
+                <div className="min-w-0">
+                  <p className="line-clamp-1 break-all hover:underline">
+                    {userToFollow.displayName}
+                  </p>
+                  <p className="line-clamp-1 break-all text-muted-foreground hover:underline">
+                    @{userToFollow.username}
+                  </p>
+                </div>
+              </Link>
+            </UserTooltip>
 
             <FollowButton
               userId={userToFollow.id}

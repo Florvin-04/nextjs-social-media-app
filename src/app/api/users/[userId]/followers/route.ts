@@ -85,7 +85,7 @@ export const DELETE = async (req: Request, { params: { userId } }: Params) => {
     const { user: loggedInUser } = await validateRequest();
 
     if (!loggedInUser)
-      return Response.json({ message: "Unauthorized", status: 401 });
+      return Response.json({ message: "Unauthorized" }, { status: 401 });
 
     await prisma.follow.deleteMany({
       where: {

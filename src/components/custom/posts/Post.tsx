@@ -5,8 +5,9 @@ import { formatRelativeDate } from "@/lib/utils";
 import PostMoreButton from "./PostMoreButton";
 import { useSession } from "@/app/(main)/SessionProvider";
 import { useQueryClient } from "@tanstack/react-query";
-import { Hand } from "lucide-react";
 import KyInstance from "@/lib/ky";
+import Linkify from "../LinkifyText";
+import UserTooltip from "../UserTooltip";
 
 type Props = {
   post: PostData;
@@ -14,21 +15,22 @@ type Props = {
 
 const Post = ({ post }: Props) => {
   const { user } = useSession();
+
   return (
     <article className="group/post rounded-2xl bg-card p-5">
       <div className="flex items-start justify-between">
         <div className="flex flex-wrap gap-3">
-          {/* <Link href={`/users/${post.user.username}`} className="">
-            <UserAvatar avatarUrl={post.user.avatarUrl!} />
-          </Link> */}
           <RenderPostLink post={post} />
           <div>
-            <Link
-              href={`/users/${post.user.username}`}
-              className="block font-medium hover:underline"
-            >
-              {post.user.username}
-            </Link>
+            <UserTooltip user={post.user}>
+              <Link
+                href={`/users/${post.user.username}`}
+                className="block font-medium hover:underline"
+              >
+                {post.user.username}
+              </Link>
+            </UserTooltip>
+
             <Link
               href={`/posts/${post.id}`}
               className="text-sm text-muted-foreground hover:underline"
@@ -44,7 +46,9 @@ const Post = ({ post }: Props) => {
           />
         )}
       </div>
-      <div className="whitespace-pre-line break-words">{post.content}</div>
+      <Linkify>
+        <div className="whitespace-pre-line break-words">{post.content}</div>
+      </Linkify>
     </article>
   );
 };
@@ -85,12 +89,14 @@ export function RenderPostLink({ post }: Props) {
   };
 
   return (
-    <Link
-      // onMouseEnter={handleOnMouseEnter}
-      href={`/users/${post.user.username}`}
-      className=""
-    >
-      <UserAvatar avatarUrl={post.user.avatarUrl!} />
-    </Link>
+    <UserTooltip user={post.user}>
+      <Link
+        // onMouseEnter={handleOnMouseEnter}
+        href={`/users/${post.user.username}`}
+        className=""
+      >
+        <UserAvatar avatarUrl={post.user.avatarUrl!} />
+      </Link>
+    </UserTooltip>
   );
 }

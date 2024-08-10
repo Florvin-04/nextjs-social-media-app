@@ -91,7 +91,7 @@ type UserProfileProps = {
 };
 
 async function UserProfile({ loggedInUserId, user }: UserProfileProps) {
-  const followeInfo: FollowerInfo = {
+  const followerState: FollowerInfo = {
     followers: user._count.followers,
     isFollowedByUser: user.followers.some(
       (follower) => follower.followerId === loggedInUserId,
@@ -115,7 +115,7 @@ async function UserProfile({ loggedInUserId, user }: UserProfileProps) {
             {user.id === loggedInUserId ? (
               <Button>Edit Profile</Button>
             ) : (
-              <FollowButton initalState={followeInfo} userId={user.id} />
+              <FollowButton initalState={followerState} userId={user.id} />
             )}
           </div>
         </div>
@@ -126,7 +126,7 @@ async function UserProfile({ loggedInUserId, user }: UserProfileProps) {
           </p>
           <p>
             <span>Followers: </span>
-            <FollowerCount initalState={followeInfo} userId={user.id} />
+            <FollowerCount initalState={followerState} userId={user.id} />
           </p>
         </div>
       </div>
