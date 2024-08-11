@@ -18,11 +18,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useUpdateProfileMutation } from "./mutation";
 import Image, { StaticImageData } from "next/image";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import avatarPlaceHolder from "@/assets/avatar-placeholder.png";
 import { Camera } from "lucide-react";
 import CropImageDialog from "@/components/custom/CropImageDialog";
 import Resizer from "react-image-file-resizer";
+import { fileTypeChecker } from "@/lib/utils";
 
 type Props = {
   user: UserData;
@@ -122,7 +123,25 @@ type AvatarInputProps = {
 function AvatarInput({ onCropedImage, src }: AvatarInputProps) {
   const [imageToCrop, setImageToCrop] = useState<File>();
 
-  const handleChangeImage = (image: File | undefined) => {
+  const handleSetFile = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    const isValidFile = fileTypeChecker({
+      file,
+      extensionNames: ["jpg", "png", "webp"],
+    });
+
+    if (!isValidFile) {
+      console.log("Invalid file type");
+      return;
+    }
+
+    handleChangeImage(file);
+  };
+
+  const handleChangeImage = (image: File) => {
     if (!image) return;
 
     console.log({ image });
@@ -139,6 +158,35 @@ function AvatarInput({ onCropedImage, src }: AvatarInputProps) {
     );
   };
 
+  const handleDropImage = (e: React.DragEvent<HTMLSpanElement>) => {
+    e.preventDefault();
+    const files = e.dataTransfer.files;
+
+    // this return all files with status of true or false
+    // const arrayOfFiles = Array.from(files);
+    // const validFiles = arrayOfFiles.map((file) => {
+    //   return {
+    //     file,
+    //     status: fileTypeChecker({
+    //       file,
+    //       extensionNames: ["jpg", "png", "webp"],
+    //     }),
+    //   };
+    // });
+
+    const isValidFile = fileTypeChecker({
+      file: files[0],
+      extensionNames: ["jpg", "png", "webp"],
+    });
+
+    if (!isValidFile) {
+      console.log("Invalid file type");
+      return;
+    }
+
+    handleChangeImage(files[0]);
+  };
+
   return (
     <>
       <label className="group relative size-fit cursor-pointer rounded-full">
@@ -149,14 +197,21 @@ function AvatarInput({ onCropedImage, src }: AvatarInputProps) {
           width={150}
           height={150}
         />
-        <span className="absolute inset-0 flex items-center justify-center rounded-full bg-black opacity-30 transition-all duration-300 group-hover:opacity-50">
+        <span
+          className="absolute inset-0 flex items-center justify-center rounded-full bg-black opacity-30 transition-all duration-300 group-hover:opacity-50"
+          onDragOver={(e) => {
+            e.preventDefault();
+          }}
+          onDrop={handleDropImage}
+        >
           <Camera size={34} />
         </span>
         <input
           hidden
           type="file"
           accept="image/*"
-          onChange={(e) => handleChangeImage(e.target.files?.[0])}
+          // onChange={(e) => handleChangeImage(e.target.files?.[0])}
+          onChange={handleSetFile}
         />
       </label>
       {imageToCrop && (

@@ -26,3 +26,22 @@ export const formatNumber = (n: number): string => {
     maximumFractionDigits: 1,
   }).format(n);
 };
+
+
+export const fileTypeChecker = ({
+  file,
+  extensionNames,
+}: {
+  file: File;
+  extensionNames: String[];
+}) => {
+  const fileExtensionName = file.name.split(".")[1];
+
+  if (!fileExtensionName) return false;
+
+  if (extensionNames.includes(fileExtensionName)) {
+    return true;
+  }
+
+  return false;
+};

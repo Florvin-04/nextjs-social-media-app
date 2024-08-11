@@ -1,4 +1,4 @@
-"use clients";
+"use client";
 
 import KyInstance from "@/lib/ky";
 import { UserData } from "@/lib/types";
