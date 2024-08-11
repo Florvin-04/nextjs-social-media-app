@@ -44,3 +44,12 @@ export const createPostSchema = z.object({
 });
 
 export type CreatePostType = z.infer<typeof createPostSchema>;
+
+
+// ** To you can also update profile pic but it it already handled by core.ts in uploadthing server
+export const updateUserProfileScheme = z.object({
+  displayName: z.string().trim().min(1, "required field"),
+  bio: z.string().max(1000, "Must be at most 1000 characters"),
+});
+
+export type UpdateUserProfileValues = z.infer<typeof updateUserProfileScheme>;

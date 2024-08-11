@@ -41,7 +41,7 @@ function LinkifyEmail({ children }: PropsWithChildren) {
 function LinkifyUsername({ children }: PropsWithChildren) {
   return (
     <LinkIt
-      regex={/(?<=\s|^)(@[a-zA-Z0-9_-]+)/} //(?<=\s|^)
+      regex={/(?<=\s|^)(@[a-zA-Z0-9_-]+)/} //(?<=\s|^) look forward in regex before the actual regex
       component={(match, key) => {
         const username = match.slice(1);
         return (

@@ -12,13 +12,8 @@ import { toast } from "@/components/ui/use-toast";
 
 function SignUpForm() {
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState("");
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignUpSchemaType>({
+  const { control, handleSubmit } = useForm<SignUpSchemaType>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: "",
@@ -48,32 +43,26 @@ function SignUpForm() {
       <div className="space-y-4">
         <CustomFormFields
           type="text"
-          error={errors}
-          register={register}
+          control={control}
           label="Email"
           name="email"
           placeholder="Email"
         />
         <CustomFormFields
           type="text"
-          error={errors}
-          register={register}
+          control={control}
           label="Username"
           name="username"
           placeholder="Username"
         />
         <PasswordInputField
-          type="password"
-          error={errors}
-          register={register}
+          control={control}
           label="Password"
           name="password"
           placeholder="Password"
         />
         <PasswordInputField
-          type="password"
-          error={errors}
-          register={register}
+          control={control}
           label="Confirm Password"
           name="confirmPassword"
           placeholder="Confirm Password"

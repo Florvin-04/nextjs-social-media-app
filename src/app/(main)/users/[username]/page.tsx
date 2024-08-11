@@ -11,6 +11,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import UserPosts from "./UserPosts";
+import EditProfileButton from "./EditProfileButton";
 
 type UserPageProps = {
   params: {
@@ -71,8 +72,8 @@ export default async function UserPage({
   const user = await getUser({ username, loggedInUserId: loggedInUser.id });
 
   return (
-    <div className="flex w-full">
-      <div className="flex-1 space-y-3">
+    <div className="flex w-full min-w-0">
+      <div className="flex-1 space-y-3 min-w-0">
         <UserProfile user={user} loggedInUserId={loggedInUser.id} />
 
         <div className="rounded-2xl bg-card py-5 text-center">
@@ -113,7 +114,7 @@ async function UserProfile({ loggedInUserId, user }: UserProfileProps) {
           </div>
           <div>
             {user.id === loggedInUserId ? (
-              <Button>Edit Profile</Button>
+              <EditProfileButton user={user} />
             ) : (
               <FollowButton initalState={followerState} userId={user.id} />
             )}
@@ -129,6 +130,12 @@ async function UserProfile({ loggedInUserId, user }: UserProfileProps) {
             <FollowerCount initalState={followerState} userId={user.id} />
           </p>
         </div>
+
+        {user.bio && (
+          <div className="border-t-2 border-border">
+            <p className="mt-2">{user.bio}</p>
+          </div>
+        )}
       </div>
     </div>
   );

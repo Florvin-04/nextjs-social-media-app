@@ -15,7 +15,7 @@ const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginSchemaType>({
@@ -47,17 +47,14 @@ const LoginForm = () => {
       <div className="space-y-3">
         // name should be one of the key in the schema
         <CustomFormFields
+          control={control}
           type="text"
-          error={errors}
-          register={register}
           label="Username"
           name="username"
           placeholder="Username"
         />
         <PasswordInputField
-          type="password"
-          error={errors}
-          register={register}
+          control={control}
           label="Password"
           name="password"
           placeholder="Password"

@@ -1,42 +1,53 @@
 "use client";
 
-import { UseFormRegister, FieldErrors, FieldError } from "react-hook-form";
+import { Control, useController, FieldValues, Path } from "react-hook-form";
 import { Input } from "../ui/input";
 import React from "react";
-import PasswordInputField from "./PasswordInputField";
+import { Textarea } from "../ui/textarea";
 
-type FormFieldProps = {
-  label: string;
-  register: UseFormRegister<any>;
-  name: string;
-  placeholder: string;
-  error: FieldErrors;
-} & React.InputHTMLAttributes<HTMLInputElement>;
+type FormFieldProps<T extends FieldValues> = {
+  control: Control<T>;
+  name: Path<T>;
+  label?: string;
+  enableTexArea?: boolean;
+} & (React.ComponentProps<"input"> | React.ComponentProps<"textarea">);
 
-const CustomFormFields = ({
-  error,
+const CustomFormFields = <T extends FieldValues>({
   label,
+  control,
   name,
-  placeholder,
-  register,
-  type,
-}: FormFieldProps) => {
+  enableTexArea,
+  ...inputProps
+}: FormFieldProps<T>) => {
+  const {
+    field,
+    formState: { errors },
+  } = useController({ name, control });
+
   return (
-    <div>
-      <label htmlFor={name} className="capitalize">
-        {label}
-      </label>
-      <Input
-        type={type}
-        autoComplete="off"
-        {...register(`${name}`)}
-        id={name}
-        placeholder={placeholder}
-        className="rounded-[.5rem]"
-      />
-      {error[name] && (
+    <div className="space-y-2">
+      {label && (
+        <label htmlFor={name} className="capitalize">
+          {label}
+        </label>
+      )}
+      {enableTexArea ? (
+        <Textarea
+          {...control.register(name)}
+          {...(inputProps as React.ComponentProps<"textarea">)}
+        />
+      ) : (
+        <Input
+          {...(inputProps as React.ComponentProps<"input">)}
+          autoComplete="off"
+          {...control.register(name)}
+          className="rounded-[.5rem]"
+        />
+      )}
+
+      {errors[name] && (
         <span className="text-sm text-red-500">
-          {error[name].message as string}
+          {errors[name].message as string}
         </span>
       )}
     </div>

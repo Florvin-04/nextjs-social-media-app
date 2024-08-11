@@ -1,6 +1,11 @@
 "use client";
 
-import { UseFormRegister, FieldErrors } from "react-hook-form";
+import {
+  UseFormRegister,
+  FieldErrors,
+  Control,
+  useController,
+} from "react-hook-form";
 import { Input } from "../ui/input";
 import React, { useState } from "react";
 import Eye from "@/assets/icons/Eye";
@@ -8,22 +13,22 @@ import { Button } from "../ui/button";
 import HiddenEye from "@/assets/icons/HiddenEye";
 
 type FormFieldProps = {
+  control: Control<any>;
   label: string;
-  type: "password";
-  register: UseFormRegister<any>;
+  type?: "password";
   name: string;
-  placeholder: string;
-  error: FieldErrors;
-};
+} & React.ComponentProps<"input">;
 
 const PasswordInputField = ({
-  error,
   label,
   name,
-  placeholder,
-  register,
-  type,
+  control,
+  type = "password",
 }: FormFieldProps) => {
+  const {
+    formState: { errors },
+  } = useController({ name, control });
+
   const [isShowPassword, setisShowPassword] = useState(true);
   return (
     <div className="">
@@ -34,9 +39,8 @@ const PasswordInputField = ({
         <Input
           type={isShowPassword ? type : "text"}
           autoComplete="off"
-          {...register(`${name}`)}
+          {...control.register(`${name}`)}
           id={name}
-          placeholder={placeholder}
           className="rounded-[.5rem]"
         />
         <Button
@@ -55,9 +59,9 @@ const PasswordInputField = ({
           }}
         />
       </div>
-      {error[name] && (
+      {errors[name] && (
         <span className="text-sm text-red-500">
-          {error[name].message as string}
+          {errors[name].message as string}
         </span>
       )}
     </div>
