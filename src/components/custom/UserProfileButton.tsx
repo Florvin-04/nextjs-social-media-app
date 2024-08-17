@@ -64,7 +64,7 @@ const UserProfileButton = ({ className }: Props) => {
             className,
           )}
           variant="ghost"
-          icon={<UserAvatar size={40} />}
+          icon={<UserAvatar avatarUrl={user.avatarUrl!} size={40} />}
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-fit">
