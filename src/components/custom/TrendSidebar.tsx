@@ -108,7 +108,7 @@ const getTrendingTopics = unstable_cache(
 const TrendingTopics = async () => {
   const trendingTopics = await getTrendingTopics();
 
-  console.log(trendingTopics);
+  // console.log(trendingTopics);
 
   return (
     <div className="flex flex-col gap-3 rounded-2xl bg-card p-3">

@@ -46,6 +46,7 @@ export default function PostEditor() {
     }) || "";
 
   const handleSubmit = () => {
+    console.log({ attachments });
     mutaion.mutate(
       {
         content: input,
@@ -55,6 +56,7 @@ export default function PostEditor() {
       },
       {
         onSuccess: () => {
+          resetAttachmentsState();
           editor?.commands.clearContent();
         },
       },
@@ -74,12 +76,12 @@ export default function PostEditor() {
         <AddAttachmentButton
           isUploading={isUploading}
           uploadProgress={uploadProgress!}
-          disabled={isUploading || attachments.length >= 5}
+          disabled={isUploading || attachments.length >= 5 || mutaion.isPending}
           onFilesSelected={startUpload}
         />
         <Button
           isLoading={mutaion.isPending}
-          disabled={mutaion.isPending || input.trim() === ""}
+          disabled={mutaion.isPending || input.trim() === "" || isUploading}
           onClick={handleSubmit}
           className="flex h-full w-fit px-3"
         >
@@ -117,7 +119,7 @@ function AddAttachmentButton({
       >
         {isUploading ? (
           <>
-            <span>{uploadProgress} %</span>
+            <span>{uploadProgress ?? 0}%</span>
             <Loader2 className="size-5 animate-spin text-primary" />{" "}
           </>
         ) : (
@@ -207,10 +209,10 @@ function AttachementPreview({
       {!isUploading && (
         <Button
           onClick={() => removeAttachment(file.name)}
-          className="absolute right-0 top-0"
+          className="absolute right-0 top-0 h-0 w-0 -translate-y-[40%] rounded-full p-3"
           size="icon"
-          icon={<X size={20} />}
-          variant="ghost"
+          icon={<X size={15} className="h-full" />}
+          variant="outline"
         />
       )}
     </div>

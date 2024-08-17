@@ -11,11 +11,14 @@ type Props = {
 };
 
 export const handleSubmitPostAction = async (userPost: Props) => {
+  // console.log(userPost)
   const { user } = await validateRequest();
 
   if (!user) throw Error("Unauthentorized");
 
   const { content: parsedContent, mediaIds } = createPostSchema.parse(userPost);
+
+  console.log({ parsedContent, mediaIds });
 
   const newPost = await prisma.post.create({
     data: {

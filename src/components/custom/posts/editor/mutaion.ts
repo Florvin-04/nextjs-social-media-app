@@ -8,6 +8,7 @@ import {
 import { handleSubmitPostAction } from "./action";
 import { PostPage } from "@/lib/types";
 import { useSession } from "@/app/(main)/SessionProvider";
+import { ZodError } from "zod";
 
 export const useSubmitPostMutation = () => {
   const { toast } = useToast();
@@ -38,7 +39,7 @@ export const useSubmitPostMutation = () => {
         },
       } satisfies QueryFilters;
 
-      console.log({ queryFilter });
+      // console.log({ queryFilter });
 
       await queryClient.cancelQueries(queryFilter);
 
@@ -72,6 +73,10 @@ export const useSubmitPostMutation = () => {
       toast({ variant: "success", title: "Success", description: "Post" });
     },
     onError: (error) => {
+      if (error instanceof ZodError) {
+        console.log("Zod validation error:", error);
+      }
+      console.log(error);
       toast({
         variant: "destructive",
         description: "Please Try Again",

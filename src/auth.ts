@@ -57,7 +57,7 @@ export const validateRequest = cache(
 
     const result = await lucia.validateSession(sessionId);
 
-    console.log(result);
+    // console.log(result);
 
     try {
       if (result.session && result.session.fresh) {

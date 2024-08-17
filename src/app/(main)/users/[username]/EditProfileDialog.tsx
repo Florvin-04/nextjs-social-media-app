@@ -45,7 +45,7 @@ export default function EditProfileDialog({ open, openChange, user }: Props) {
   const [croppedAvatar, setCroppedAvatar] = useState<Blob | null>(null);
 
   function handleSubmitForm(values: UpdateUserProfileValues) {
-    console.log({ croppedAvatar });
+    // console.log({ croppedAvatar });
 
     const newAvatarFile = croppedAvatar
       ? new File([croppedAvatar], `avatar_${user.id}.webp`, {
@@ -53,7 +53,7 @@ export default function EditProfileDialog({ open, openChange, user }: Props) {
         })
       : undefined;
 
-    console.log({ newAvatarFile });
+    // console.log({ newAvatarFile });
 
     mutation.mutate(
       {
@@ -144,7 +144,7 @@ function AvatarInput({ onCropedImage, src }: AvatarInputProps) {
   const handleChangeImage = (image: File) => {
     if (!image) return;
 
-    console.log({ image });
+    // console.log({ image });
 
     Resizer.imageFileResizer(
       image,

@@ -8,12 +8,14 @@ import { useQueryClient } from "@tanstack/react-query";
 import KyInstance from "@/lib/ky";
 import Linkify from "../LinkifyText";
 import UserTooltip from "../UserTooltip";
+import { Media } from "@prisma/client";
+import Image from "next/image";
 
 type Props = {
   post: PostData;
 };
 
-const Post = ({ post }: Props) => {
+export default function Post({ post }: Props) {
   const { user } = useSession();
 
   return (
@@ -49,11 +51,12 @@ const Post = ({ post }: Props) => {
       <Linkify>
         <div className="whitespace-pre-line break-words">{post.content}</div>
       </Linkify>
+      {!!post.attachments.length && (
+        <DisplayAttachments attachments={post.attachments} />
+      )}
     </article>
   );
-};
-
-export default Post;
+}
 
 export function RenderPostLink({ post }: Props) {
   "use client";
@@ -99,4 +102,54 @@ export function RenderPostLink({ post }: Props) {
       </Link>
     </UserTooltip>
   );
+}
+
+type DisplayAttachmentsProps = {
+  attachments: Media[];
+};
+
+function DisplayAttachments({ attachments }: DisplayAttachmentsProps) {
+  return (
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2">
+      {attachments.map((attachment) => {
+        return (
+          <div className="h-full">
+            <SingleAttachment attachment={attachment} />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+type SingleAttachmentProps = {
+  attachment: Media;
+};
+
+function SingleAttachment({ attachment }: SingleAttachmentProps) {
+  if (attachment.type === "IMAGE") {
+    return (
+      <Image
+        width={0}
+        height={0}
+        sizes="100vw"
+        style={{ width: "100%", height: "100%", objectFit: "contain" }}
+        alt="image attachment"
+        src={attachment.url}
+        className="max-h-[20rem]"
+      />
+    );
+  }
+
+  if (attachment.type === "VIDEO") {
+    return (
+      <div className="h-full">
+        <video controls className="h-full">
+          <source src={attachment.url} />
+        </video>
+      </div>
+    );
+  }
+
+  return <p className="text-destructive">Unsupported File</p>;
 }

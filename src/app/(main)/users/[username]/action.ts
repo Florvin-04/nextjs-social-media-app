@@ -13,7 +13,7 @@ export async function updateUserProfile(values: UpdateUserProfileValues) {
 
   const { user } = await validateRequest();
 
-  console.log({ validatedValues });
+  // console.log({ validatedValues });
 
   if (!user) throw new Error("Unauthorized");
 

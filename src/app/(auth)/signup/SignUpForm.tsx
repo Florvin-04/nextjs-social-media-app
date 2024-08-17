@@ -23,7 +23,7 @@ function SignUpForm() {
   });
 
   const handleSubmitForm = (values: SignUpSchemaType) => {
-    console.log({ values });
+    // console.log({ values });
 
     startTransition(async () => {
       const { error } = await handleSignUpAction(values);

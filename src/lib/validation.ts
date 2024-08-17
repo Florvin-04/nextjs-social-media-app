@@ -41,7 +41,7 @@ export type LoginSchemaType = z.infer<typeof loginSchema>;
 
 export const createPostSchema = z.object({
   content: z.string().trim().min(1, "required field"),
-  mediaIds: z.array(z.string().max(5, "Cannot have more than 5 attachments")),
+  mediaIds: z.array(z.string()).max(5, "Cannot have more than 5 attachments"),
 });
 
 export type CreatePostType = z.infer<typeof createPostSchema>;
