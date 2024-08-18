@@ -1,3 +1,5 @@
+"use client";
+
 import { PostData, PostPage } from "@/lib/types";
 import Link from "next/link";
 import UserAvatar from "../UserAvatar";
@@ -110,10 +112,10 @@ type DisplayAttachmentsProps = {
 
 function DisplayAttachments({ attachments }: DisplayAttachmentsProps) {
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2">
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-2">
       {attachments.map((attachment) => {
         return (
-          <div className="h-full">
+          <div key={attachment.id} className="h-full">
             <SingleAttachment attachment={attachment} />
           </div>
         );

@@ -24,7 +24,7 @@ const PostMoreButton = ({ post, className }: Props) => {
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger className={cn("", className)}>
+        <DropdownMenuTrigger asChild className={cn("", className)}>
           <Button
             variant="ghost"
             className="h-fit w-fit p-0 px-1"

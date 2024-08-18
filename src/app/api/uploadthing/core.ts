@@ -1,12 +1,10 @@
 import { validateRequest } from "@/auth";
-import { CONFIG_APP } from "@/config";
+import { replaceUploadThingUrl } from "@/lib/constants";
 import prisma from "@/lib/prisma";
 import { createUploadthing, FileRouter } from "uploadthing/next";
 import { UploadThingError, UTApi } from "uploadthing/server";
 
 const f = createUploadthing();
-
-const replaceUrl = `/a/${CONFIG_APP.env.UPLOADTHING_APP_ID}/`;
 
 const userValidateMiddleware = async () => {
   const { user } = await validateRequest();
@@ -25,12 +23,12 @@ export const fileRouter = {
       const oldAvatar = metadata.user.avatarUrl;
 
       if (oldAvatar) {
-        const key = oldAvatar.split(`${replaceUrl}`)[1];
+        const key = oldAvatar.split(`${replaceUploadThingUrl}`)[1];
 
         await new UTApi().deleteFiles(key);
       }
 
-      const newAvatarUrl = file.url.replace("/f/", `${replaceUrl}`);
+      const newAvatarUrl = file.url.replace("/f/", `${replaceUploadThingUrl}`);
 
       await prisma.user.update({
         where: {
@@ -50,7 +48,7 @@ export const fileRouter = {
   })
     .middleware(userValidateMiddleware)
     .onUploadComplete(async ({ file }) => {
-      const newFileUrl = file.url.replace("/f/", `${replaceUrl}`);
+      const newFileUrl = file.url.replace("/f/", `${replaceUploadThingUrl}`);
       const media = await prisma.media.create({
         data: {
           url: newFileUrl,

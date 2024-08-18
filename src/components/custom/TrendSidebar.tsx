@@ -4,7 +4,6 @@ import { getUserDataSelect } from "@/lib/types";
 import Link from "next/link";
 import React, { Suspense } from "react";
 import UserAvatar from "./UserAvatar";
-import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { unstable_cache } from "next/cache";
 import { formatNumber } from "@/lib/utils";
@@ -13,8 +12,14 @@ import UserTooltip from "./UserTooltip";
 
 const TrendSidebar = async () => {
   return (
-    <div className="mb sticky top-[4.3rem] hidden h-fit w-72 flex-none space-y-5 rounded-md px-5 py-3 md:block lg:w-80">
-      <Suspense fallback={<Loader2 className="mx-auto animate-spin" />}>
+    <div className="mb sticky top-[4.3rem] hidden h-fit w-72 flex-none -translate-y-[1rem] divide-y-2 rounded-ee-2xl rounded-es-2xl bg-card md:block lg:w-80">
+      <Suspense
+        fallback={
+          <div className="flex h-[10rem] items-center justify-center bg-background">
+            <Loader2 className="animate-spin" />
+          </div>
+        }
+      >
         <WhoToFollow />
         <TrendingTopics />
       </Suspense>
@@ -26,6 +31,8 @@ export default TrendSidebar;
 
 const WhoToFollow = async () => {
   const { user } = await validateRequest();
+
+  // await new Promise((resolve) => setTimeout(resolve, 5000));
 
   if (!user) return null;
 
@@ -45,7 +52,7 @@ const WhoToFollow = async () => {
   });
 
   return (
-    <div className="space-y-3 rounded-2xl bg-card px-3 py-3">
+    <div className="space-y-3 px-3 py-3">
       <p className="text-xl font-bold"> Who to follow</p>
       {usersToFollow.map((userToFollow) => {
         return (
@@ -111,7 +118,7 @@ const TrendingTopics = async () => {
   // console.log(trendingTopics);
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl bg-card p-3">
+    <div className="flex flex-col gap-3 p-3">
       <p className="text-xl font-bold">Trending Topics</p>
 
       {trendingTopics.map(({ count, hashtag }) => {

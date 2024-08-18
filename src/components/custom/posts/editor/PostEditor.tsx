@@ -12,7 +12,8 @@ import useMediaUpload, { AttachmentsProps } from "./useMediaUpload";
 import { ImageIcon, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import LoadingIcon from "@/assets/icons/LoadingIcon";
+import { useDropzone } from "@uploadthing/react";
+import { ClipboardEvent } from "react";
 
 export default function PostEditor() {
   const { user } = useSession();
@@ -26,6 +27,12 @@ export default function PostEditor() {
     startUpload,
     uploadProgress,
   } = useMediaUpload();
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: startUpload,
+  });
+
+  const { onClick, ...rootProps } = getRootProps();
 
   const editor = useEditor({
     extensions: [
@@ -46,7 +53,7 @@ export default function PostEditor() {
     }) || "";
 
   const handleSubmit = () => {
-    console.log({ attachments });
+    // console.log({ attachments });
     mutaion.mutate(
       {
         content: input,
@@ -63,14 +70,31 @@ export default function PostEditor() {
     );
   };
 
+  const onPasteImage = (e: ClipboardEvent<HTMLInputElement>) => {
+    const files = Array.from(e.clipboardData.items)
+      .filter((item) => item.kind === "file")
+      .map((item) => item.getAsFile()) as File[];
+
+    if (!files) {
+      startUpload(files);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-3 rounded-2xl bg-card px-2 py-3">
       <div className="flex gap-4">
         <UserAvatar avatarUrl={user.avatarUrl!} />
-        <EditorContent
-          editor={editor}
-          className="h-fit max-h-[10rem] w-full overflow-y-auto rounded-md bg-background px-3 pb-3 pt-2.5"
-        />
+        <div {...rootProps} className="w-full min-w-0">
+          <EditorContent
+            editor={editor}
+            className={cn(
+              "h-fit max-h-[10rem] w-full overflow-y-auto rounded-md bg-background px-3 pb-3 pt-2.5",
+              isDragActive && "outline-dashed outline-2",
+            )}
+            onPaste={onPasteImage}
+          />
+          <input {...getInputProps()} />
+        </div>
       </div>
       <div className="flex h-[2.2rem] items-center justify-end gap-2">
         <AddAttachmentButton
@@ -157,7 +181,10 @@ function AttachmentsParent({
     <div className="flex h-full flex-wrap gap-x-2">
       {attachments.map((attachment) => {
         return (
-          <div className="h-full">
+          <div
+            key={`AttchementParentPreview${attachment.file.name}`}
+            className="h-full"
+          >
             <AttachementPreview
               removeAttachment={removeAttachment}
               attachment={attachment}
