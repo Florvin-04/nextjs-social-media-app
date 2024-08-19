@@ -12,6 +12,7 @@ import Linkify from "../LinkifyText";
 import UserTooltip from "../UserTooltip";
 import { Media } from "@prisma/client";
 import Image from "next/image";
+import LikeButton from "./LikeButton";
 
 type Props = {
   post: PostData;
@@ -21,7 +22,7 @@ export default function Post({ post }: Props) {
   const { user } = useSession();
 
   return (
-    <article className="group/post rounded-2xl bg-card p-5">
+    <article className="group/post rounded-2xl bg-card p-5 space-y-3">
       <div className="flex items-start justify-between">
         <div className="flex flex-wrap gap-3">
           <RenderPostLink post={post} />
@@ -38,6 +39,7 @@ export default function Post({ post }: Props) {
             <Link
               href={`/posts/${post.id}`}
               className="text-sm text-muted-foreground hover:underline"
+              suppressHydrationWarning
             >
               {formatRelativeDate(post.createdAt)}
             </Link>
@@ -56,6 +58,14 @@ export default function Post({ post }: Props) {
       {!!post.attachments.length && (
         <DisplayAttachments attachments={post.attachments} />
       )}
+
+      <LikeButton
+        postId={post.id}
+        initalState={{
+          isLikedByUser: post.likes.some((like) => like.userId === user.id),
+          likes: post._count.likes,
+        }}
+      />
     </article>
   );
 }

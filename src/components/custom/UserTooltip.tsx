@@ -29,7 +29,9 @@ export default function UserTooltip({ children, user }: Props) {
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger asChild>{children}</TooltipTrigger>
+        <TooltipTrigger asChild className="cursor-pointer">
+          {children}
+        </TooltipTrigger>
         <TooltipContent className="space-y-3">
           <div className="flex items-center gap-3">
             <UserAvatar avatarUrl={user.avatarUrl!} />

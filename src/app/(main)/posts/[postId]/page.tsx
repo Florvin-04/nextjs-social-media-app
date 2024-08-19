@@ -1,10 +1,14 @@
 import { validateRequest } from "@/auth";
+import Linkify from "@/components/custom/LinkifyText";
 import Post from "@/components/custom/posts/Post";
+import UserAvatar from "@/components/custom/UserAvatar";
+import UserTooltip from "@/components/custom/UserTooltip";
 import prisma from "@/lib/prisma";
 import { getPostDataInclude, UserData } from "@/lib/types";
+import { Loader2 } from "lucide-react";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { cache } from "react";
+import { cache, Suspense } from "react";
 
 type PageProps = {
   params: {
@@ -33,7 +37,7 @@ const getPost = cache(
   },
 );
 
-export async function generateMetaData({
+export async function generateMetadata({
   params: { postId },
 }: PageProps): Promise<Metadata> {
   const { user } = await validateRequest();
@@ -57,12 +61,23 @@ export default async function PostPage({ params: { postId } }: PageProps) {
   const post = await getPost({ postId, loggedInUserId: user.id });
 
   return (
-    <div className="min-w-0 flex-1 relative">
+    <div className="relative min-w-0 flex-1">
       <div className="flex min-w-0 gap-2">
         <div className="min-w-0 flex-1">
           <Post post={post} />
         </div>
-        <UserSidebar user={post.user} />
+
+        <div className="w-72">
+          <Suspense
+            fallback={
+              <div className="flex h-[10rem] items-center justify-center">
+                <Loader2 className="animate-spin" />
+              </div>
+            }
+          >
+            <UserSidebar user={post.user} />
+          </Suspense>
+        </div>
       </div>
     </div>
   );
@@ -75,11 +90,29 @@ type UserSidebarProps = {
 async function UserSidebar({ user }: UserSidebarProps) {
   const { user: loggedInUser } = await validateRequest();
 
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+
   if (!loggedInUser) return null;
 
   return (
-    <div className="h-fit -translate-y-[1rem] sticky top-[4.3rem] rounded-ee-2xl rounded-es-2xl bg-card px-4 py-3">
-      {user.displayName}
+    <div className="sticky top-[4.3rem] h-fit w-full -translate-y-[1rem] space-y-4 rounded-ee-2xl rounded-es-2xl bg-card px-4 py-3">
+      <p className="text-2xl font-bold">About this user</p>
+      <UserTooltip user={user}>
+        <div className="flex gap-2">
+          <UserAvatar avatarUrl={user.avatarUrl!} />
+          <div>
+            <p className="line-clamp-1 break-all font-semibold">
+              {user.displayName}
+            </p>
+            <p className="line-clamp-1 break-all text-sm text-muted-foreground">
+              @{user.username}
+            </p>
+          </div>
+        </div>
+      </UserTooltip>
+      <Linkify>
+        <div className="whitespace-pre-line break-words">{user.bio}</div>
+      </Linkify>
     </div>
   );
 }

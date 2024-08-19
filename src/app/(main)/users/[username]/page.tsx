@@ -43,7 +43,7 @@ export const getUser = cache(
   },
 );
 
-export async function generateMetaData({
+export async function generateMetadata({
   params: { username },
 }: UserPageProps): Promise<Metadata> {
   const { user: loggedInUser } = await validateRequest();
@@ -73,7 +73,7 @@ export default async function UserPage({
   const user = await getUser({ username, loggedInUserId: loggedInUser.id });
 
   return (
-    <div className="flex w-full min-w-0">
+    <div className="flex w-full min-w-0 gap-2">
       <div className="min-w-0 flex-1 space-y-3">
         <UserProfile user={user} loggedInUserId={loggedInUser.id} />
 

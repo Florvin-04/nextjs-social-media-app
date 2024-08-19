@@ -18,15 +18,19 @@ const Menubar = ({ className }: Props) => {
 
   return (
     <div className={cn("bg-card", className)}>
-      {/* <Button variant="ghost" asChild className="" icon={<Home />}>
-        <Link href="/">
-          <span className="hidden lg:inline"> "Home" </span>
-        </Link>
-      </Button> */}
       {menuBarItem.map((item) => {
         return (
-          <Link href={item.path} key={`menubar-nav-key${item.name}`}>
-            <Button asChild variant="ghost" className="" icon={item.icon}>
+          <Link
+            href={item.path}
+            key={`menubar-nav-key${item.name}`}
+            className=""
+          >
+            <Button
+              asChild
+              variant="ghost"
+              className="w-full justify-start"
+              icon={item.icon}
+            >
               <span className="hidden lg:inline">{item.name}</span>
             </Button>
           </Link>

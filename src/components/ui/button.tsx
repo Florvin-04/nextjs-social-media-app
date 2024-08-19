@@ -40,6 +40,7 @@ export interface ButtonProps
   asChild?: boolean;
   isLoading?: boolean;
   icon?: React.ReactNode;
+  parentClassName?: string;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -52,6 +53,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       isLoading,
       icon,
       asChild = false,
+      parentClassName,
       ...props
     },
     ref,
@@ -61,7 +63,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         children={
           icon || isLoading ? (
-            <div className="flex w-fit items-center justify-center gap-2">
+            <div
+              className={cn("flex w-fit items-center gap-2", parentClassName)}
+            >
               {icon && !isLoading && icon}
               {isLoading && <LoadingIcon />}
               {children && <>{children}</>}
@@ -72,7 +76,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         }
         className={cn(
           "cursor-pointer",
-          buttonVariants({ variant, size, className }),
+          buttonVariants({ variant, size }),
+          className,
         )}
         ref={ref}
         {...props}
