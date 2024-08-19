@@ -1,10 +1,15 @@
 import { validateRequest } from "@/auth";
-import { pageSizeInfiniteScroll } from "@/lib/constants";
 import prisma from "@/lib/prisma";
-import { PostPage, getPostDataInclude } from "@/lib/types";
+import { CommentsPage, getCommentDataInclude } from "@/lib/types";
 import { NextRequest } from "next/server";
 
-export async function GET(req: NextRequest) {
+type Params = {
+  params: {
+    postId: string;
+  };
+};
+
+export async function GET(req: NextRequest, { params: { postId } }: Params) {
   try {
     const { user } = await validateRequest();
 
@@ -15,18 +20,21 @@ export async function GET(req: NextRequest) {
     // to determine where the next fetch is in(prisma database)
     const cursor = req.nextUrl.searchParams.get("cursor") || undefined;
 
-    const posts = await prisma.post.findMany({
-      include: getPostDataInclude(user.id),
-      orderBy: { createdAt: "desc" },
-      take: pageSizeInfiniteScroll + 1,
+    const pageSize = 5;
+
+    const comments = await prisma.comment.findMany({
+      where: {
+        postId,
+      },
+      include: getCommentDataInclude(user.id),
+      take: -pageSize - 1,
       cursor: cursor ? { id: cursor } : undefined,
     });
+    const prevCursor = comments.length > pageSize ? comments[0].id : null;
 
-    const nextCursor = posts.length > pageSizeInfiniteScroll ? posts[pageSizeInfiniteScroll].id : null;
-
-    const data: PostPage = {
-      posts: posts.slice(0, pageSizeInfiniteScroll),
-      nextCursor: nextCursor,
+    const data: CommentsPage = {
+      comments: comments.length > pageSize ? comments.slice(1) : comments,
+      prevCursor,
     };
 
     return Response.json(data);

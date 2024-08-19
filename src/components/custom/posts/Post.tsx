@@ -14,6 +14,9 @@ import { Media } from "@prisma/client";
 import Image from "next/image";
 import LikeButton from "./LikeButton";
 import BookmarkButton from "./BookmarkButton";
+import { MessageSquare } from "lucide-react";
+import { useState } from "react";
+import Comments from "../comments/Comments";
 
 type Props = {
   post: PostData;
@@ -21,6 +24,8 @@ type Props = {
 
 export default function Post({ post }: Props) {
   const { user } = useSession();
+
+  const [showComment, setShowComment] = useState(false);
 
   return (
     <article className="group/post space-y-3 rounded-2xl bg-card p-5">
@@ -61,13 +66,19 @@ export default function Post({ post }: Props) {
       )}
 
       <div className="flex items-center justify-between">
-        <LikeButton
-          postId={post.id}
-          initalState={{
-            isLikedByUser: post.likes.some((like) => like.userId === user.id),
-            likes: post._count.likes,
-          }}
-        />
+        <div className="flex items-center gap-2">
+          <LikeButton
+            postId={post.id}
+            initalState={{
+              isLikedByUser: post.likes.some((like) => like.userId === user.id),
+              likes: post._count.likes,
+            }}
+          />
+          <CommentButton
+            onClick={() => setShowComment(!showComment)}
+            post={post}
+          />
+        </div>
 
         <BookmarkButton
           postId={post.id}
@@ -78,6 +89,7 @@ export default function Post({ post }: Props) {
           }}
         />
       </div>
+      {showComment && <Comments post={post} />}
     </article>
   );
 }
@@ -176,4 +188,20 @@ function SingleAttachment({ attachment }: SingleAttachmentProps) {
   }
 
   return <p className="text-destructive">Unsupported File</p>;
+}
+
+type CommentButtonProps = {
+  post: PostData;
+  onClick: () => void;
+};
+
+function CommentButton({ post, onClick }: CommentButtonProps) {
+  return (
+    <button onClick={onClick} className="flex items-center gap-2">
+      <MessageSquare className="size-5" />
+      <span className="text-sm tabular-nums">
+        Comments {post._count.comments}
+      </span>
+    </button>
+  );
 }

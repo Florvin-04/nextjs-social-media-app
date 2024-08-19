@@ -53,3 +53,9 @@ export const updateUserProfileScheme = z.object({
 });
 
 export type UpdateUserProfileValues = z.infer<typeof updateUserProfileScheme>;
+
+export const commentSchema = z.object({
+  content: z.string().trim().min(1, "required field"),
+});
+
+export type commentValues = z.infer<typeof commentSchema>;
