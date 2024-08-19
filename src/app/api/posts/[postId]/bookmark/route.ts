@@ -1,6 +1,6 @@
 import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
-import { LikeInfo } from "@/lib/types";
+import { BookmarkInfo } from "@/lib/types";
 
 type Params = {
   params: {
@@ -21,7 +21,7 @@ export async function GET(req: Request, { params: { postId } }: Params) {
       },
 
       select: {
-        likes: {
+        bookmarks: {
           where: {
             userId: loggedInUser.id,
           },
@@ -30,20 +30,14 @@ export async function GET(req: Request, { params: { postId } }: Params) {
             userId: true,
           },
         },
-
-        _count: {
-          select: {
-            likes: true,
-          },
-        },
       },
     });
+
     if (!post)
       return Response.json({ message: "Post not found" }, { status: 404 });
 
-    const data: LikeInfo = {
-      likes: post._count.likes,
-      isLikedByUser: !!post.likes.length,
+    const data: BookmarkInfo = {
+      isBookmarkedByUser: !!post.bookmarks.length,
     };
 
     return Response.json(data);
@@ -59,7 +53,7 @@ export async function POST(req: Request, { params: { postId } }: Params) {
     if (!loggedInUser)
       return Response.json({ message: "Unauthorized" }, { status: 401 });
 
-    await prisma.like.upsert({
+    await prisma.bookmark.upsert({
       where: {
         userId_postId: {
           postId,
@@ -88,12 +82,14 @@ export async function DELETE(req: Request, { params: { postId } }: Params) {
     if (!loggedInUser)
       return Response.json({ message: "Unauthorized" }, { status: 401 });
 
-    await prisma.like.deleteMany({
+    await prisma.bookmark.deleteMany({
       where: {
         postId,
         userId: loggedInUser.id,
       },
     });
+
+    return new Response();
   } catch (error) {
     return Response.json({ error: "Internal Server Error" }, { status: 500 });
   }

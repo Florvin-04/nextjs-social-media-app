@@ -13,6 +13,7 @@ import UserTooltip from "../UserTooltip";
 import { Media } from "@prisma/client";
 import Image from "next/image";
 import LikeButton from "./LikeButton";
+import BookmarkButton from "./BookmarkButton";
 
 type Props = {
   post: PostData;
@@ -22,7 +23,7 @@ export default function Post({ post }: Props) {
   const { user } = useSession();
 
   return (
-    <article className="group/post rounded-2xl bg-card p-5 space-y-3">
+    <article className="group/post space-y-3 rounded-2xl bg-card p-5">
       <div className="flex items-start justify-between">
         <div className="flex flex-wrap gap-3">
           <RenderPostLink post={post} />
@@ -59,13 +60,24 @@ export default function Post({ post }: Props) {
         <DisplayAttachments attachments={post.attachments} />
       )}
 
-      <LikeButton
-        postId={post.id}
-        initalState={{
-          isLikedByUser: post.likes.some((like) => like.userId === user.id),
-          likes: post._count.likes,
-        }}
-      />
+      <div className="flex items-center justify-between">
+        <LikeButton
+          postId={post.id}
+          initalState={{
+            isLikedByUser: post.likes.some((like) => like.userId === user.id),
+            likes: post._count.likes,
+          }}
+        />
+
+        <BookmarkButton
+          postId={post.id}
+          initalState={{
+            isBookmarkedByUser: post.bookmarks.some(
+              (bookmark) => bookmark.userId === user.id,
+            ),
+          }}
+        />
+      </div>
     </article>
   );
 }
