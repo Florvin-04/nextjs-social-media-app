@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { handleSubmitCommentAction } from "./action";
-import { CommentsPage } from "@/lib/types";
+import { CommentsInfo, CommentsPage } from "@/lib/types";
 import { toast } from "@/components/ui/use-toast";
 import { ZodError } from "zod";
 
@@ -16,13 +16,21 @@ export function useSubmitCommentMutaion(postId: string) {
     mutationFn: handleSubmitCommentAction,
     onSuccess: async (createdComment) => {
       const queryKey: QueryKey = ["comments", postId];
+      const queryKeyCommentInfo: QueryKey = ["comment-info", postId];
 
       await queryClient.cancelQueries({ queryKey });
+
+      await queryClient.cancelQueries({ queryKey: queryKeyCommentInfo });
 
       queryClient.setQueryData<InfiniteData<CommentsPage, string | null>>(
         queryKey,
         (oldData) => {
           const firstPage = oldData?.pages[0];
+
+          // const totalCount = oldData?.pages.reduce(
+          //   (total, page) => total + (page.comments.comments || 0),
+          //   0,
+          // );
 
           if (firstPage) {
             return {
@@ -36,6 +44,18 @@ export function useSubmitCommentMutaion(postId: string) {
               ],
             };
           }
+        },
+      );
+
+      const previousData =
+        queryClient.getQueryData<CommentsInfo>(queryKeyCommentInfo);
+
+      queryClient.setQueryData<CommentsInfo>(
+        queryKeyCommentInfo,
+        (): CommentsInfo => {
+          return {
+            comments: (previousData?.comments || 0) + 1,
+          };
         },
       );
 
@@ -61,5 +81,5 @@ export function useSubmitCommentMutaion(postId: string) {
     },
   });
 
-  return mutaion
+  return mutaion;
 }

@@ -17,6 +17,7 @@ import BookmarkButton from "./BookmarkButton";
 import { MessageSquare } from "lucide-react";
 import { useState } from "react";
 import Comments from "../comments/Comments";
+import CommentButton from "../comments/CommentButton";
 
 type Props = {
   post: PostData;
@@ -77,6 +78,9 @@ export default function Post({ post }: Props) {
           <CommentButton
             onClick={() => setShowComment(!showComment)}
             post={post}
+            initalState={{
+              comments: post._count.comments,
+            }}
           />
         </div>
 
@@ -112,7 +116,7 @@ export function RenderPostLink({ post }: Props) {
         JSON.stringify(["post-feed", "user-posts", post.user.id]),
     );
 
-    console.log(containsArray);
+    // console.log(containsArray);
 
     if (containsArray) return;
 
@@ -195,13 +199,13 @@ type CommentButtonProps = {
   onClick: () => void;
 };
 
-function CommentButton({ post, onClick }: CommentButtonProps) {
-  return (
-    <button onClick={onClick} className="flex items-center gap-2">
-      <MessageSquare className="size-5" />
-      <span className="text-sm tabular-nums">
-        Comments {post._count.comments}
-      </span>
-    </button>
-  );
-}
+// function CommentButton({ post, onClick }: CommentButtonProps) {
+//   return (
+//     <button onClick={onClick} className="flex items-center gap-2">
+//       <MessageSquare className="size-5" />
+//       <span className="text-sm tabular-nums">
+//         Comments {post._count.comments}
+//       </span>
+//     </button>
+//   );
+// }

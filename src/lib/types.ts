@@ -102,6 +102,10 @@ export type LikeInfo = {
   isLikedByUser: boolean;
 };
 
+export type CommentsInfo = {
+  comments: number;
+};
+
 export type BookmarkInfo = {
   isBookmarkedByUser: boolean;
 };

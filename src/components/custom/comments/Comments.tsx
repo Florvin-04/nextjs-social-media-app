@@ -11,27 +11,21 @@ type Props = {
 };
 
 export default function Comments({ post }: Props) {
-  const {
-    data,
-    status,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isFetching,
-  } = useInfiniteQuery({
-    queryKey: ["comments", post.id],
-    queryFn: ({ pageParam }) =>
-      KyInstance.get(
-        `/api/posts/${post.id}/comments`,
-        pageParam ? { searchParams: { cursor: pageParam } } : {},
-      ).json<CommentsPage>(),
-    initialPageParam: null as string | null,
-    getNextPageParam: (firstPage) => firstPage.prevCursor,
-    select: (data) => ({
-      pages: [...data.pages].reverse(),
-      pageParams: [...data.pageParams].reverse(),
-    }),
-  });
+  const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ["comments", post.id],
+      queryFn: ({ pageParam }) =>
+        KyInstance.get(
+          `/api/posts/${post.id}/comments`,
+          pageParam ? { searchParams: { cursor: pageParam } } : {},
+        ).json<CommentsPage>(),
+      initialPageParam: null as string | null,
+      getNextPageParam: (firstPage) => firstPage.prevCursor,
+      select: (data) => ({
+        pages: [...data.pages].reverse(),
+        pageParams: [...data.pageParams].reverse(),
+      }),
+    });
 
   const comments = data?.pages.flatMap((page) => page.comments) || [];
 
@@ -61,7 +55,7 @@ export default function Comments({ post }: Props) {
           })}
         </div>
       ) : (
-        <div className="flex justify-center items-center h-[3rem]">
+        <div className="flex h-[3rem] items-center justify-center">
           <p>No Comments Available</p>
         </div>
       )}

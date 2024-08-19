@@ -11,7 +11,7 @@ type Props = {
 };
 
 export async function handleSubmitCommentAction({ content, post }: Props) {
-  console.log({ post, content });
+  // console.log({ post, content });
 
   const { user } = await validateRequest();
 
