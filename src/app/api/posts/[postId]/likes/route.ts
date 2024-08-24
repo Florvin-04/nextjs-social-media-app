@@ -59,21 +59,48 @@ export async function POST(req: Request, { params: { postId } }: Params) {
     if (!loggedInUser)
       return Response.json({ message: "Unauthorized" }, { status: 401 });
 
-    await prisma.like.upsert({
+    const post = await prisma.post.findUnique({
       where: {
-        userId_postId: {
+        id: postId,
+      },
+      select: {
+        userId: true,
+      },
+    });
+
+    if (!post)
+      return Response.json({ message: "Post Not Found" }, { status: 404 });
+
+    // transaction in prisma if one operation is unsuccessful the other will rollback or will also fails
+    await prisma.$transaction([
+      prisma.like.upsert({
+        where: {
+          userId_postId: {
+            postId,
+            userId: loggedInUser.id,
+          },
+        },
+
+        create: {
           postId,
           userId: loggedInUser.id,
         },
-      },
 
-      create: {
-        postId,
-        userId: loggedInUser.id,
-      },
-
-      update: {},
-    });
+        update: {},
+      }),
+      ...(loggedInUser.id !== post.userId
+        ? [
+            prisma.notification.create({
+              data: {
+                issuerId: loggedInUser.id,
+                recipientId: post.userId,
+                postId,
+                type: "LIKE",
+              },
+            }),
+          ]
+        : []),
+    ]);
 
     return new Response();
   } catch (error) {
@@ -88,12 +115,37 @@ export async function DELETE(req: Request, { params: { postId } }: Params) {
     if (!loggedInUser)
       return Response.json({ message: "Unauthorized" }, { status: 401 });
 
-    await prisma.like.deleteMany({
+    const post = await prisma.post.findUnique({
       where: {
-        postId,
-        userId: loggedInUser.id,
+        id: postId,
+      },
+      select: {
+        userId: true,
       },
     });
+
+    if (!post)
+      return Response.json({ message: "Post Not Found" }, { status: 404 });
+
+    await prisma.$transaction([
+      prisma.like.deleteMany({
+        where: {
+          postId,
+          userId: loggedInUser.id,
+        },
+      }),
+
+      prisma.notification.deleteMany({
+        where: {
+          issuerId: loggedInUser.id,
+          recipientId: post.userId,
+          postId,
+          type: "LIKE",
+        },
+      }),
+    ]);
+
+    return new Response();
   } catch (error) {
     return Response.json({ error: "Internal Server Error" }, { status: 500 });
   }
