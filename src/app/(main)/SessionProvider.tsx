@@ -23,6 +23,7 @@ export default SessionProvider;
 
 export const useSession = () => {
   const context = useContext(SessionContext);
+
   if (!context) {
     throw new Error("useSessionsContext must be used inside SessionProvider");
   }

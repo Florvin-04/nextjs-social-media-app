@@ -18,11 +18,11 @@ const layout = async ({
     <SessionProvider value={session}>
       <div className="flex min-h-[100svh] flex-col">
         <Navbar />
-        <div className="relative mx-auto flex w-[min(100rem,100%)] gap-2 px-3 py-3 md:pr-0 sm:pl-0 lg:pb-3">
-          <Menubar className="sticky top-[4.3rem] -translate-y-[1rem] hidden h-fit w-fit flex-col gap-1 rounded-lg px-2 py-2 sm:flex" />
+        <div className="relative mx-auto flex w-[min(100rem,100%)] flex-1 gap-2 px-3 py-3 sm:pl-0 md:pr-0 lg:pb-3">
+          <Menubar className="sticky top-[4.3rem] hidden h-fit w-fit -translate-y-[1rem] flex-col gap-1 rounded-lg px-2 py-2 sm:flex" />
           {children}
         </div>
-        <Menubar className="mt-auto flex justify-evenly py-1 sm:hidden sticky bottom-0" />
+        <Menubar className="sticky bottom-0 mt-auto flex justify-evenly py-1 sm:hidden" />
       </div>
     </SessionProvider>
   );
