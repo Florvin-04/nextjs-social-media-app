@@ -41,6 +41,8 @@ export interface ButtonProps
   isLoading?: boolean;
   icon?: React.ReactNode;
   parentClassName?: string;
+  enabledNotification?: boolean;
+  notificationCount?: number;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -54,6 +56,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       icon,
       asChild = false,
       parentClassName,
+      enabledNotification,
+      notificationCount,
       ...props
     },
     ref,
@@ -66,7 +70,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             <div
               className={cn("flex w-fit items-center gap-2", parentClassName)}
             >
-              {icon && !isLoading && icon}
+              {icon && !isLoading && (
+                <div className="relative">
+                  {icon}
+                  {enabledNotification && (
+                    <span className="absolute right-0 top-0 block -translate-y-1/2 translate-x-1/2 rounded-full bg-primary px-1 text-xs tabular-nums text-white">
+                      {notificationCount || 0}
+                    </span>
+                  )}
+                </div>
+              )}
               {isLoading && <LoadingIcon />}
               {children && <>{children}</>}
             </div>

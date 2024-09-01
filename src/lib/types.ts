@@ -127,6 +127,10 @@ export type LikeInfo = {
   isLikedByUser: boolean;
 };
 
+export type NotificationCountInfo = {
+  unreadCount: number;
+};
+
 export type CommentsInfo = {
   comments: number;
 };

@@ -1,5 +1,6 @@
 import UserAvatar from "@/components/custom/UserAvatar";
 import { NotificationData } from "@/lib/types";
+import { cn } from "@/lib/utils";
 import { NotificationType } from "@prisma/client";
 import { Heart, MessageCircle, User2 } from "lucide-react";
 import Link from "next/link";
@@ -16,7 +17,7 @@ export default function Notification({ notification }: Props) {
     COMMENT: {
       message: `commented on you posts`,
       icon: <MessageCircle className="size-7 text-primary" />,
-      href: `/users/${notification.postId}`,
+      href: `/posts/${notification.postId}`,
     },
     FOLLOW: {
       message: `followed you`,
@@ -34,7 +35,11 @@ export default function Notification({ notification }: Props) {
 
   return (
     <Link href={href} className="block min-w-0">
-      <article className="flex w-full min-w-0 items-start gap-3 rounded-2xl bg-card px-4 py-3">
+      <article
+        className={cn(
+          "relative flex w-full min-w-0 items-start gap-3 rounded-2xl bg-card px-4 py-3",
+        )}
+      >
         <div className="my2-1">{icon}</div>
         <div className="min-w-0 flex-1 space-y-3">
           <div className="flex items-center gap-2">
@@ -50,6 +55,9 @@ export default function Notification({ notification }: Props) {
             </div>
           )}
         </div>
+        {!notification.read && (
+          <div className="size-5 rounded-full bg-primary" />
+        )}
       </article>
     </Link>
   );

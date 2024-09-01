@@ -2,10 +2,15 @@
 
 import InfiniteScrollContainer from "@/components/custom/InfiniteScrollContainer";
 import KyInstance from "@/lib/ky";
-import { NotificationsPage } from "@/lib/types";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { NotificationCountInfo, NotificationsPage } from "@/lib/types";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import Notification from "./Notification";
+import { useEffect } from "react";
 
 export default function Notifications() {
   const {
@@ -27,6 +32,32 @@ export default function Notifications() {
     initialPageParam: null as string | null,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
+
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: () => KyInstance.patch("/api/notifications/marked-as-read"),
+    onSuccess: () => {
+      queryClient.setQueryData<NotificationCountInfo>(
+        ["unread-notification-count"],
+        (): NotificationCountInfo => {
+          return {
+            unreadCount: 0,
+          };
+        },
+      );
+    },
+
+    onError: (error) => {
+      console.error("notifications error", error);
+    },
+  });
+
+  useEffect(() => {
+    if (status === "success") {
+      mutate();
+    }
+  }, [status]);
 
   if (status === "pending") {
     return (
