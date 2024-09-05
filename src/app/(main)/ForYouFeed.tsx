@@ -41,6 +41,10 @@ const ForYouFeed = () => {
 
   const posts = data.pages.flatMap((page) => page.posts) || [];
 
+  if (posts.length === 0) {
+    return <div className="text-center">No Post Available</div>;
+  }
+
   return (
     <InfiniteScrollContainer
       isFetchingNextPage={isFetchingNextPage}

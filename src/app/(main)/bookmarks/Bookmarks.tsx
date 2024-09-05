@@ -40,7 +40,9 @@ export default function Bookmarks() {
     return <div className="text-center text-destructive">error</div>;
   }
 
-  const bookmarkedPost = data.pages.flatMap((page) => page.posts) || [];
+  const bookmarkedPost =
+    data.pages.flatMap((page) => page.posts).filter((a) => a !== undefined) ||
+    [];
 
   if (bookmarkedPost.length === 0) {
     return <div className="text-center">No Bookmarks Available</div>;

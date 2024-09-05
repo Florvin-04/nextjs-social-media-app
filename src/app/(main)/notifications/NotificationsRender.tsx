@@ -71,7 +71,10 @@ export default function Notifications() {
     return <div className="text-center text-destructive">error</div>;
   }
 
-  const notifications = data.pages.flatMap((page) => page.notifications) || [];
+  const notifications =
+    data.pages
+      .flatMap((page) => page.notifications)
+      .filter((a) => a !== undefined) || [];
 
   if (notifications.length === 0) {
     return <div className="text-center">No Bookmarks Available</div>;
