@@ -130,6 +130,9 @@ export type LikeInfo = {
 export type NotificationCountInfo = {
   unreadCount: number;
 };
+export type MessagesNotifInfo = {
+  unreadCount: number;
+};
 
 export type CommentsInfo = {
   comments: number;

@@ -34,18 +34,21 @@ export default function CropImageDialog({
 
   return (
     <Dialog open onOpenChange={onClosed}>
-      <DialogContent>
+      <DialogContent className="">
         <DialogHeader>
           <DialogTitle>Crop Image</DialogTitle>
         </DialogHeader>
-        <Cropper
-          src={src}
-          aspectRatio={cropAspectRatio}
-          guides={false}
-          zoomable={false}
-          ref={cropperRef}
-          className="mx-auto size-fit"
-        />
+        <div className="max-h-[70svh] overflow-y-auto">
+          <Cropper
+            src={src}
+            aspectRatio={cropAspectRatio}
+            guides={false}
+            zoomable={false}
+            ref={cropperRef}
+            className="mx-auto size-fit"
+          />
+        </div>
+
         <DialogFooter>
           <Button variant="secondary" onClick={onClosed}>
             Cancel

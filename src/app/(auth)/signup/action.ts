@@ -2,6 +2,7 @@
 
 import { lucia } from "@/auth";
 import prisma from "@/lib/prisma";
+import streamServerClient from "@/lib/stream";
 import { signUpSchema, SignUpSchemaType } from "@/lib/validation";
 import { hash } from "@node-rs/argon2";
 import { generateIdFromEntropySize } from "lucia";
@@ -54,14 +55,29 @@ export const handleSignUpAction = async (
       };
     }
 
-    await prisma.user.create({
-      data: {
+    // ********************************
+
+    //* 'Interactive Transcation'
+    //* use this transcation to create for multiple await function, if one fails, the transaction will be rollbacked, this transaction will support not only prisma client but also others function.  
+
+    // ********************************
+
+    await prisma.$transaction(async (tx) => {
+      await tx.user.create({
+        data: {
+          id: userId,
+          username,
+          displayName: username,
+          email,
+          passwordHash,
+        },
+      });
+
+      await streamServerClient.upsertUser({
         id: userId,
+        name: username,
         username,
-        displayName: username,
-        email,
-        passwordHash,
-      },
+      });
     });
 
     const session = await lucia.createSession(userId, {});

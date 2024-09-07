@@ -1,6 +1,7 @@
 import { validateRequest } from "@/auth";
 import { replaceUploadThingUrl } from "@/lib/constants";
 import prisma from "@/lib/prisma";
+import streamServerClient from "@/lib/stream";
 import { createUploadthing, FileRouter } from "uploadthing/next";
 import { UploadThingError, UTApi } from "uploadthing/server";
 
@@ -30,14 +31,23 @@ export const fileRouter = {
 
       const newAvatarUrl = file.url.replace("/f/", `${replaceUploadThingUrl}`);
 
-      await prisma.user.update({
-        where: {
+      await Promise.all([
+        prisma.user.update({
+          where: {
+            id: metadata.user.id,
+          },
+          data: {
+            avatarUrl: newAvatarUrl,
+          },
+        }),
+
+        streamServerClient.partialUpdateUser({
           id: metadata.user.id,
-        },
-        data: {
-          avatarUrl: newAvatarUrl,
-        },
-      });
+          set: {
+            avatarUrl: newAvatarUrl,
+          },
+        }),
+      ]);
 
       return { avatarUrl: newAvatarUrl };
     }),

@@ -5,6 +5,7 @@ import { FormEvent, useRef, useState } from "react";
 import { useSubmitCommentMutaion } from "./mutation";
 import { PostData } from "@/lib/types";
 import _ from "lodash";
+import useDebounce from "@/hooks/useDebounce";
 
 type Props = {
   post: PostData;
@@ -43,7 +44,7 @@ export default function CommentInput({ post }: Props) {
     });
   };
 
-  const debounceHandler = _.debounce(validateFormValues, 250);
+  const debounceHandler = useDebounce(validateFormValues);
 
   return (
     <form
