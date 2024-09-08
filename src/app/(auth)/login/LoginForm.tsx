@@ -45,7 +45,7 @@ const LoginForm = () => {
   return (
     <form onSubmit={handleSubmit(handleSubmitForm)} className="px-3 py-2">
       <div className="space-y-3">
-        // name should be one of the key in the schema
+         {/* name should be one of the key in the schema */}
         <CustomFormFields
           control={control}
           type="text"

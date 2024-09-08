@@ -5,5 +5,8 @@ export const CONFIG_APP = {
     NODE_ENV: process.env.NODE_ENV,
     STREAM_KEY: process.env.NEXT_PUBLIC_STREAM_KEY,
     STREAM_SECRET: process.env.STREAM_CHAT_SECRET,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   },
 };

@@ -58,7 +58,7 @@ export const handleSignUpAction = async (
     // ********************************
 
     //* 'Interactive Transcation'
-    //* use this transcation to create for multiple await function, if one fails, the transaction will be rollbacked, this transaction will support not only prisma client but also others function.  
+    //* use this transcation to create for multiple await function, if one fails, the transaction will be rollbacked, this transaction will support not only prisma client but also others function.
 
     // ********************************
 
@@ -90,6 +90,13 @@ export const handleSignUpAction = async (
     );
 
     return redirect("/");
+
+    // return new Response(null, {
+    //   status: 302,
+    //   headers: {
+    //     Location: "/",
+    //   },
+    // });
   } catch (error) {
     if (isRedirectError(error)) throw error;
 

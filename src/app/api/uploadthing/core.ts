@@ -22,14 +22,20 @@ export const fileRouter = {
     .middleware(userValidateMiddleware)
     .onUploadComplete(async ({ metadata, file }) => {
       const oldAvatar = metadata.user.avatarUrl;
+      console.log({
+        oldAvatar,
+        asd: oldAvatar && !oldAvatar.includes("googleusercontent"),
+      });
 
-      if (oldAvatar) {
+      if (oldAvatar && !oldAvatar.includes("googleusercontent")) {
         const key = oldAvatar.split(`${replaceUploadThingUrl}`)[1];
 
         await new UTApi().deleteFiles(key);
       }
 
       const newAvatarUrl = file.url.replace("/f/", `${replaceUploadThingUrl}`);
+
+      console.log({ oldAvatar, newAvatarUrl, userId: metadata.user.id });
 
       await Promise.all([
         prisma.user.update({

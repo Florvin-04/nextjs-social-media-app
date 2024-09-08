@@ -124,7 +124,7 @@ const TrendingTopics = async () => {
       {trendingTopics.map(({ count, hashtag }) => {
         const title = hashtag.split("#")[1];
         return (
-          <Link key={title} href={`/hastag/${title}`}>
+          <Link key={title} href={`/hashtag/${title}`}>
             <p className="font-bold hover:underline">{hashtag}</p>
             <p className="text-sm text-muted-foreground hover:underline">
               {formatNumber(count)} {count === 1 ? "post" : "posts"}

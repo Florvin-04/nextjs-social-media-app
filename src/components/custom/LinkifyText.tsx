@@ -61,12 +61,12 @@ function LinkifyHastag({ children }: PropsWithChildren) {
     <LinkIt
       regex={/(#[a-zA-Z0-9_-]+)/}
       component={(match, key) => {
-        const hastag = match.slice(1);
+        const hashtag = match.slice(1);
         return (
           <Link
             className="text-primary hover:underline"
             key={key}
-            href={`/hastag/${hastag}`}
+            href={`/hashtag/${hashtag}`}
           >
             {match}
           </Link>

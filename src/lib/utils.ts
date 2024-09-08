@@ -27,7 +27,6 @@ export const formatNumber = (n: number): string => {
   }).format(n);
 };
 
-
 export const fileTypeChecker = ({
   file,
   extensionNames,
@@ -44,4 +43,11 @@ export const fileTypeChecker = ({
   }
 
   return false;
+};
+
+export const slugify = (text: string) => {
+  return text
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
 };
