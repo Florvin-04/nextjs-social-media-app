@@ -20,7 +20,7 @@ type UserPageProps = {
   };
 };
 
-export const getUser = cache(
+const getUser = cache(
   async ({
     loggedInUserId,
     username,
