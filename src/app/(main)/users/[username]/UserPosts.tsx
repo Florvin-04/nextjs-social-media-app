@@ -11,7 +11,7 @@ type Props = {
   userId: string;
 };
 
-const UserPosts = ({ userId }: Props) => {
+export default function UserPosts({ userId }: Props) {
   const {
     data,
     status,
@@ -65,6 +65,4 @@ const UserPosts = ({ userId }: Props) => {
       {isFetchingNextPage && <Loader2 className="mx-auto animate-spin" />}
     </InfiniteScrollContainer>
   );
-};
-
-export default UserPosts;
+}
