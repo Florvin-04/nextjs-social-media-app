@@ -10,10 +10,17 @@ export const metadata: Metadata = {
 
 const LoginPage = () => {
   return (
-    <div className="flex h-[100svh] flex-col items-center justify-center bg-red-500">
-      <div className="w-[min(50rem,90%)] bg-card py-3">
-        <h1 className="text-center font-bold">Log In</h1>
-        <GoogleSignInButton />
+    <div className="flex h-[100svh] flex-col items-center justify-center">
+      <div className="w-[min(50rem,90%)] bg-card py-3 px-3">
+        <h1 className="text-center text-2xl font-bold">Log In</h1>
+        <div className="flex justify-center mt-2">
+          <GoogleSignInButton />
+        </div>
+        <div className="flex items-center gap-3 mt-3">
+          <div className="h-px flex-1 bg-muted"/>
+          <p>OR</p>
+          <div className="h-px flex-1 bg-muted"/>
+        </div>
         <LoginForm />
         <div className="text-center">
           <Link className="hover:underline" href="/signup">

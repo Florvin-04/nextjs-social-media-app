@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 
 const signUpPage = () => {
   return (
-    <div className="flex h-[100svh] flex-col bg-red-500">
+    <div className="flex h-[100svh] flex-col">
       <div className="m-auto w-[min(50rem,90%)] bg-card py-3">
-        <h1 className="text-center font-bold">Sign Up Form</h1>
+        <h1 className="text-center font-bold text-2xl">Sign Up Form</h1>
         <SignUpForm />
         <div className="text-center">
           <Link className="hover:underline" href="/login">
