@@ -42,15 +42,16 @@ export const handleLoginAction = async (
       };
     }
 
+    const sessionDuration = 24 * 60 * 60 * 1000; // sec
+
     const session = await lucia.createSession(usernameExist.id, {});
 
     const sessionCookie = lucia.createSessionCookie(session.id);
 
-    cookies().set(
-      sessionCookie.name,
-      sessionCookie.value,
-      sessionCookie.attributes,
-    );
+    cookies().set(sessionCookie.name, sessionCookie.value, {
+      ...sessionCookie.attributes,
+      maxAge: sessionDuration,
+    });
 
     return redirect("/");
   } catch (error) {
