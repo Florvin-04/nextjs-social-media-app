@@ -12,7 +12,7 @@ import UserTooltip from "./UserTooltip";
 
 const TrendSidebar = async () => {
   return (
-    <div className="mb sticky top-[4.3rem] hidden h-fit w-72 flex-none -translate-y-[1rem] divide-y-2 rounded-ee-2xl rounded-es-2xl bg-card md:block lg:w-80">
+    <div className="mb sticky top-[4.3rem] hidden h-[calc(100svh-4.3rem)] w-72 flex-none -translate-y-[1rem] divide-y-2 overflow-auto rounded-ee-2xl rounded-es-2xl md:block lg:w-80">
       <Suspense
         fallback={
           <div className="flex h-[10rem] items-center justify-center bg-background">
@@ -53,14 +53,14 @@ const WhoToFollow = async () => {
 
   return (
     <div className="space-y-3 px-3 py-3">
-      <p className="text-xl font-bold"> Who to follow</p>
+      <p className="text-xl font-bold"> People you may know</p>
       {usersToFollow.map((userToFollow) => {
         return (
           <div
             key={userToFollow.id}
             className="flex items-center justify-between gap-3"
           >
-            <UserTooltip user={userToFollow}>
+            <UserTooltip alignment="start" user={userToFollow}>
               <Link
                 href={`/users/${userToFollow.username}`}
                 className="flex items-center gap-3"

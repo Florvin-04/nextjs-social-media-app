@@ -1,0 +1,70 @@
+{
+	// Place your global snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	"user Print to console": {
+		"scope": "javascript,typescript,javascriptreact,typescriptreact",
+		"prefix": "cl",
+		"body": [
+			"console.log($1);",
+		],
+		"description": "Log output to console"
+	},
+	"user NextJS Functional Component": {
+		"scope": "javascriptreact,typescriptreact",
+		"prefix": "nextPage",
+		"body": [
+			"type Props = {}",
+			"",
+			"export default function $1({}:Props){",
+			"return <div>$1</div>",
+			"};"
+		],
+		"description": "Log output to console"
+	},
+
+	"user reactJS esestate": {
+		"scope": "javascriptreact,typescriptreact",
+		"prefix": "uss",
+		"body": [
+			"const [$1, set$1] = useState();",
+		],
+		"description": "react usState"
+	},
+
+	"user generate next endpoint": {
+		"scope": "javascript,typescript",
+		"prefix": "nextEP",
+		"body": [
+			"export async function $1(req: Request){",
+			"   try {",
+			"  ",
+			"   } catch (error){",
+			"      return Response.json({ error: 'Internal Server Error' }, { status: 500 });",
+			"   }",
+			"}",
+		],
+		"description": "Next Endpoints"
+	},
+
+	"user generate async function action": {
+		"scope": "javascript,typescript",
+		"prefix": "nextAA",
+		"body": [
+			"'use server'",
+			"",
+			"type Props = {}",
+			"export async function $1({}:Props){",
+			"}",
+		],
+		"description": "Next Asycn action function"
+	}
+}
+
+// export default function $1(){
+// 	return <div>$1</div>
+//   };

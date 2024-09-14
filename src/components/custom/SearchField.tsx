@@ -23,11 +23,11 @@ const SearchField = () => {
     <form onSubmit={handleSubmitForm} method="GET" action="/search">
       <div className="relative">
         <Input
-          className="pe-[2.5rem] focus-visible:ring-0 focus-visible:ring-offset-0"
-          placeholder="search"
+          className="ps-[2.5rem] focus-visible:ring-0 focus-visible:ring-offset-0 bg-accent/90 rounded-full"
+          placeholder="Search"
           name="q"
         />
-        <SearchIcon className="absolute right-3 top-1/2 size-5 -translate-y-1/2" />
+        <SearchIcon className="absolute left-3 top-1/2 size-5 -translate-y-1/2" />
       </div>
     </form>
   );

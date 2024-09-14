@@ -18,6 +18,8 @@ import { MessageSquare } from "lucide-react";
 import { useState } from "react";
 import Comments from "../comments/Comments";
 import CommentButton from "../comments/CommentButton";
+import Attachement from "./Attachment";
+import DisplayAttachments from "./DisplayAttachements";
 
 type Props = {
   post: PostData;
@@ -26,7 +28,7 @@ type Props = {
 export default function Post({ post }: Props) {
   const { user } = useSession();
 
-  const [showComment, setShowComment] = useState(false);
+  // const [showComment, setShowComment] = useState(false);
 
   return (
     <article className="group/post space-y-3 rounded-2xl bg-card p-5">
@@ -76,7 +78,7 @@ export default function Post({ post }: Props) {
             }}
           />
           <CommentButton
-            onClick={() => setShowComment(!showComment)}
+            // onClick={() => setShowComment(!showComment)}
             post={post}
             initalState={{
               comments: post._count.comments,
@@ -93,7 +95,7 @@ export default function Post({ post }: Props) {
           }}
         />
       </div>
-      {showComment && <Comments post={post} />}
+      {/* {showComment && <Comments post={post} />} */}
     </article>
   );
 }
@@ -143,69 +145,3 @@ export function RenderPostLink({ post }: Props) {
     </UserTooltip>
   );
 }
-
-type DisplayAttachmentsProps = {
-  attachments: Media[];
-};
-
-function DisplayAttachments({ attachments }: DisplayAttachmentsProps) {
-  return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-2">
-      {attachments.map((attachment) => {
-        return (
-          <div key={attachment.id} className="h-full">
-            <SingleAttachment attachment={attachment} />
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-type SingleAttachmentProps = {
-  attachment: Media;
-};
-
-function SingleAttachment({ attachment }: SingleAttachmentProps) {
-  if (attachment.type === "IMAGE") {
-    return (
-      <Image
-        width={0}
-        height={0}
-        sizes="100vw"
-        style={{ width: "100%", height: "100%", objectFit: "contain" }}
-        alt="image attachment"
-        src={attachment.url}
-        className="max-h-[20rem]"
-      />
-    );
-  }
-
-  if (attachment.type === "VIDEO") {
-    return (
-      <div className="h-full">
-        <video controls className="h-full">
-          <source src={attachment.url} />
-        </video>
-      </div>
-    );
-  }
-
-  return <p className="text-destructive">Unsupported File</p>;
-}
-
-type CommentButtonProps = {
-  post: PostData;
-  onClick: () => void;
-};
-
-// function CommentButton({ post, onClick }: CommentButtonProps) {
-//   return (
-//     <button onClick={onClick} className="flex items-center gap-2">
-//       <MessageSquare className="size-5" />
-//       <span className="text-sm tabular-nums">
-//         Comments {post._count.comments}
-//       </span>
-//     </button>
-//   );
-// }

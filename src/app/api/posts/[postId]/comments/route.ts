@@ -26,15 +26,21 @@ export async function GET(req: NextRequest, { params: { postId } }: Params) {
       where: {
         postId,
       },
+      orderBy: { createdAt: "desc" },
       include: getCommentDataInclude(user.id),
-      take: -pageSize - 1,
+      // take: -pageSize - 1, // reverse
+      take: pageSize + 1,
       cursor: cursor ? { id: cursor } : undefined,
     });
-    const prevCursor = comments.length > pageSize ? comments[0].id : null;
+    // const prevCursor = comments.length > pageSize ? comments[0].id : null; // reverse
+
+    const nextCursor =
+      comments.length > pageSize ? comments[pageSize].id : null;
 
     const data: CommentsPage = {
-      comments: comments.length > pageSize ? comments.slice(1) : comments,
-      prevCursor,
+      // comments: comments.length > pageSize ? comments.slice(1) : comments, // reverse
+      comments: comments.slice(0, pageSize),
+      prevCursor: nextCursor,
     };
 
     return Response.json(data);

@@ -14,9 +14,12 @@ import FollowButton from "./FollowButton";
 import Linkify from "./LinkifyText";
 import FollowerCount from "./FollowerCount";
 
-type Props = { user: UserData } & PropsWithChildren;
+type Props = {
+  user: UserData;
+  alignment?: "center" | "end" | "start";
+} & PropsWithChildren;
 
-export default function UserTooltip({ children, user }: Props) {
+export default function UserTooltip({ children, user, alignment }: Props) {
   const { user: loggedInUser } = useSession();
 
   const followerState: FollowerInfo = {
@@ -32,7 +35,7 @@ export default function UserTooltip({ children, user }: Props) {
         <TooltipTrigger asChild className="cursor-pointer">
           {children}
         </TooltipTrigger>
-        <TooltipContent className="space-y-3">
+        <TooltipContent align={alignment!} className="space-y-3">
           <div className="flex items-center gap-3">
             <UserAvatar avatarUrl={user.avatarUrl!} />
             {user.id !== loggedInUser.id && (

@@ -9,9 +9,10 @@ import useDebounce from "@/hooks/useDebounce";
 
 type Props = {
   post: PostData;
+  setSubmitComment?: () => void;
 };
 
-export default function CommentInput({ post }: Props) {
+export default function CommentInput({ post, setSubmitComment }: Props) {
   const formRef = useRef<any>(null);
 
   const mutation = useSubmitCommentMutaion(post.id);
@@ -31,7 +32,12 @@ export default function CommentInput({ post }: Props) {
         content: comment.value,
       },
       {
-        onSuccess: () => formRef?.current?.reset(),
+        onSuccess: () => {
+          if (setSubmitComment) {
+            setSubmitComment();
+          }
+          formRef?.current?.reset();
+        },
       },
     );
   };
@@ -50,11 +56,12 @@ export default function CommentInput({ post }: Props) {
     <form
       onChange={debounceHandler}
       ref={formRef}
-      className="flex items-center gap-3"
+      className="relative z-10"
       onSubmit={handleSubmitForm}
     >
       <Input placeholder="Write a comment.." type="text" name="comment" />
       <Button
+        className="absolute right-3 top-1/2 -translate-y-1/2"
         disabled={mutation.isPending || !validateInput.comment}
         isLoading={mutation.isPending}
         size="icon"
