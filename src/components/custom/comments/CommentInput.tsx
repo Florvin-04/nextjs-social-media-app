@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { SendHorizonal } from "lucide-react";
-import { FormEvent, useRef, useState } from "react";
-import { useSubmitCommentMutaion } from "./mutation";
 import { PostData } from "@/lib/types";
-import _ from "lodash";
-import useDebounce from "@/hooks/useDebounce";
+import { SendHorizonal } from "lucide-react";
+import { FormEvent, useState } from "react";
+import PostInputField from "../posts/editor/PostInputField";
+import { useSubmitCommentMutaion } from "./mutation";
 
 type Props = {
   post: PostData;
@@ -13,56 +11,76 @@ type Props = {
 };
 
 export default function CommentInput({ post, setSubmitComment }: Props) {
-  const formRef = useRef<any>(null);
+  // const formRef = useRef<any>(null);
 
   const mutation = useSubmitCommentMutaion(post.id);
+  const [inputTest, setInputTest] = useState("");
+  const [clearContent, setClearContent] = useState(false);
 
-  const [validateInput, setValidateInput] = useState({
-    comment: false,
-  });
+  // const [validateInput, setValidateInput] = useState({
+  //   comment: false,
+  // });
 
   const handleSubmitForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { comment } = formRef?.current;
+    // const { comment } = formRef?.current;
 
     mutation.mutate(
       {
         post,
-        content: comment.value,
+        content: inputTest,
       },
       {
         onSuccess: () => {
           if (setSubmitComment) {
             setSubmitComment();
           }
-          formRef?.current?.reset();
+          setClearContent(true);
         },
       },
     );
   };
 
-  const validateFormValues = () => {
-    const { comment } = formRef?.current;
-
-    setValidateInput({
-      comment: !!comment.value.length,
-    });
+  const handleInputChange = (text: string) => {
+    setInputTest(text);
   };
 
-  const debounceHandler = useDebounce(validateFormValues);
+  const handleAfterClearContent = () => {
+    setClearContent(false);
+  };
+
+  // const validateFormValues = () => {
+  //   const { comment } = formRef?.current;
+
+  //   setValidateInput({
+  //     comment: !!comment.value.length,
+  //   });
+  // };
+
+  // const debounceHandler = useDebounce(validateFormValues);
 
   return (
     <form
-      onChange={debounceHandler}
-      ref={formRef}
-      className="relative z-10"
+      // onChange={debounceHandler}
+      // ref={formRef}
+      className="relative z-10 min-w-0"
       onSubmit={handleSubmitForm}
     >
-      <Input placeholder="Write a comment.." type="text" name="comment" />
+      {/* <Input placeholder="Write a comment.." type="text" name="comment" /> */}
+
+      <PostInputField
+        placeholder="Write a comment.."
+        className="bg-muted pr-[4rem]"
+        clearContent={clearContent}
+        handleAfterClearContent={handleAfterClearContent}
+        onInputChange={handleInputChange}
+        // onPaseImage={onPasteImage}
+      />
+
       <Button
-        className="absolute right-3 top-1/2 -translate-y-1/2"
-        disabled={mutation.isPending || !validateInput.comment}
+        className="absolute right-3 top-1/2 z-10 -translate-y-1/2"
+        disabled={mutation.isPending || !inputTest}
         isLoading={mutation.isPending}
         size="icon"
         variant="ghost"

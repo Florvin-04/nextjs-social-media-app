@@ -8,7 +8,7 @@ export type AttachmentsProps = {
   isUploading?: boolean;
 };
 
-export default function useMediaUpload() {
+export function useMediaUpload() {
   const [attachments, setAttachments] = useState<AttachmentsProps[]>([]);
 
   const [uploadProgress, setUploadProgress] = useState<number>();

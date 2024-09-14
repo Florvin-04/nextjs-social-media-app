@@ -26,10 +26,13 @@ export default function CommentsModal({ post, closeModal }: Props) {
 
   return (
     <Dialog open onOpenChange={closeModal}>
-      <DialogContent removeCloseButton className="p-0 sm:max-w-[425px]">
+      <DialogContent
+        removeCloseButton
+        className="flex flex-col justify-between p-0 sm:max-w-[425px] gap-3"
+      >
         <div
           ref={containerRef}
-          className="relative max-h-[calc(199svh-50rem)] min-w-0 overflow-auto p-6 pb-0"
+          className="relative max-h-[70svh] min-w-0 overflow-auto p-6 pb-0"
         >
           <div className="relative flex items-start gap-2">
             <UserTooltip user={post.user}>
@@ -85,7 +88,8 @@ export default function CommentsModal({ post, closeModal }: Props) {
             submitComment={submitComment}
           />
         </div>
-        <div className="sticky bottom-0 bg-card">
+
+        <div className="min-w-0">
           <CommentInput
             post={post}
             setSubmitComment={() => setSubmitComment(true)}

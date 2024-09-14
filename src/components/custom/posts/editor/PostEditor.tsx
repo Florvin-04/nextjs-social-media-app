@@ -1,22 +1,23 @@
 "use client";
 
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Placeholder from "@tiptap/extension-placeholder";
 import { useSession } from "@/app/(main)/SessionProvider";
-import UserAvatar from "../../UserAvatar";
-import "./styles.css";
 import { Button } from "@/components/ui/button";
-import { useSubmitPostMutation } from "./mutaion";
-import useMediaUpload, { AttachmentsProps } from "./useMediaUpload";
-import { ImageIcon, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import { useDropzone } from "@uploadthing/react";
-import { ClipboardEvent } from "react";
+import { ImageIcon, Loader2, X } from "lucide-react";
+import Image from "next/image";
+import { ClipboardEvent, useState } from "react";
+import UserAvatar from "../../UserAvatar";
+import { useSubmitPostMutation } from "./mutaion";
+import PostInputField from "./PostInputField";
+import "./styles.css";
+import { AttachmentsProps, useMediaUpload } from "./useMediaUpload";
 
 export default function PostEditor() {
   const { user } = useSession();
+
+  const [inputTest, setInputTest] = useState("");
+  const [clearContent, setClearContent] = useState(false);
 
   const mutaion = useSubmitPostMutation();
   const {
@@ -34,29 +35,37 @@ export default function PostEditor() {
 
   const { onClick, ...rootProps } = getRootProps();
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        bold: false,
-        italic: false,
-      }),
+  const handleInputChange = (text: string) => {
+    setInputTest(text);
+  };
 
-      Placeholder.configure({
-        placeholder: "Placeholder",
-      }),
-    ],
-  });
+  const handleAfterClearContent = () => {
+    setClearContent(false);
+  };
 
-  const input =
-    editor?.getText({
-      blockSeparator: "\n",
-    }) || "";
+  // const editor = useEditor({
+  //   extensions: [
+  //     StarterKit.configure({
+  //       bold: false,
+  //       italic: false,
+  //     }),
+
+  //     Placeholder.configure({
+  //       placeholder: "Placeholder",
+  //     }),
+  //   ],
+  // });
+
+  // const input =
+  //   editor?.getText({
+  //     blockSeparator: "\n",
+  //   }) || "";
 
   const handleSubmit = () => {
     // console.log({ attachments });
     mutaion.mutate(
       {
-        content: input,
+        content: inputTest,
         mediaIds: attachments
           .map((attachment) => attachment.mediaId)
           .filter(Boolean) as string[],
@@ -64,13 +73,14 @@ export default function PostEditor() {
       {
         onSuccess: () => {
           resetAttachmentsState();
-          editor?.commands.clearContent();
+          setClearContent(true);
+          // editor?.commands.clearContent();
         },
       },
     );
   };
 
-  const onPasteImage = (e: ClipboardEvent<HTMLInputElement>) => {
+  const onPasteImage = (e: ClipboardEvent<HTMLDivElement>) => {
     const files = Array.from(e.clipboardData.items)
       .filter((item) => item.kind === "file")
       .map((item) => item.getAsFile()) as File[];
@@ -84,7 +94,7 @@ export default function PostEditor() {
     <div className="flex flex-col gap-3 rounded-2xl bg-card px-2 py-3">
       <div className="flex gap-4">
         <UserAvatar avatarUrl={user.avatarUrl!} />
-        <div {...rootProps} className="w-full min-w-0">
+        {/* <div {...rootProps} className="w-full min-w-0">
           <EditorContent
             editor={editor}
             className={cn(
@@ -92,6 +102,18 @@ export default function PostEditor() {
               isDragActive && "outline-dashed outline-2",
             )}
             onPaste={onPasteImage}
+          />
+          <input {...getInputProps()} />
+        </div> */}
+
+        <div {...rootProps} className="w-full min-w-0">
+          <PostInputField
+            placeholder="Write a post.."
+            isDragActive={isDragActive}
+            clearContent={clearContent}
+            handleAfterClearContent={handleAfterClearContent}
+            onInputChange={handleInputChange}
+            onPaseImage={onPasteImage}
           />
           <input {...getInputProps()} />
         </div>
@@ -105,7 +127,7 @@ export default function PostEditor() {
         />
         <Button
           isLoading={mutaion.isPending}
-          disabled={mutaion.isPending || input.trim() === "" || isUploading}
+          disabled={mutaion.isPending || inputTest === "" || isUploading}
           onClick={handleSubmit}
           className="flex h-full w-fit px-3"
         >
