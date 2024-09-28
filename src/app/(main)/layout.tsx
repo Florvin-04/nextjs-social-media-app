@@ -21,7 +21,7 @@ const layout = async ({
         <div className="relative mx-auto flex w-[min(100rem,100%)] flex-1 gap-2 px-3 py-3 sm:pl-0 md:pr-0 lg:pb-3">
           <Menubar
             displayProfile
-            className="sticky top-[4.3rem] hidden h-fit w-fit -translate-y-[1rem] flex-col gap-1 rounded-lg px-2 py-2 sm:flex max-w-[15rem]"
+            className="sticky top-[4.3rem] hidden h-fit w-fit max-w-[15rem] -translate-y-[1rem] flex-col gap-1 rounded-lg px-2 py-2 sm:flex"
           />
           {children}
         </div>
