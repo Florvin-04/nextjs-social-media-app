@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -33,7 +34,10 @@ const PostMoreButton = ({ post, className }: Props) => {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent>
-          <DropdownMenuItem className="" onClick={() => setShowDeleteDialog(true)}>
+          <DropdownMenuItem
+            className=""
+            onClick={() => setShowDeleteDialog(true)}
+          >
             <span className="flex items-center gap-2">
               <Trash2 className="size-4" />
               Delete
